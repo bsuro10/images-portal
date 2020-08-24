@@ -1,4 +1,4 @@
-module server
+module github.com/bsuro10/images_portal/images-portal-grpc-client
 
 go 1.13
 
@@ -8,7 +8,7 @@ go 1.13
 require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/aws/aws-sdk-go v1.29.26 // indirect
-	github.com/bsuro10/images_portal v0.0.0-20190812093923-e702f4cdb78b
+	github.com/bsuro10/images_portal v0.0.0-20200824174705-aa8de8f028b1
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v1.13.1 // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
