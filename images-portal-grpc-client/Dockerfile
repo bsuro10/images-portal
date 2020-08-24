@@ -1,4 +1,4 @@
-FROM golang:1.12.1
+FROM ubuntu:18.04
 WORKDIR /app
 EXPOSE 8080
 CMD ["./images-portal-grpc-client"]
