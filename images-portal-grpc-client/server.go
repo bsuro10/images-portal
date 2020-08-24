@@ -11,6 +11,9 @@ import (
 	"sync"
 	"time"
 
+	"crypto/tls"
+	"crypto/x509"
+
 	oc "github.com/bsuro10/images_portal/images-portal-grpc-client/interfaces/openshift_client"
 	"github.com/bsuro10/images_portal/images-portal-grpc-server/api/docker"
 	"google.golang.org/grpc"
@@ -167,13 +170,27 @@ func getProjectsList(w http.ResponseWriter, request ProjectsRequest) []string {
 	req.Header.Add("Authorization", "Bearer "+request.Token)
 	req.Header.Add("Accept", "application/json")
 
+	caCert, err := ioutil.ReadFile("/var/run/secrets/kubernetes.io/serviceaccount/ca.crt")
+	if err != nil {
+		http.Error(w, "could not load ca certificate", http.StatusInternalServerError)
+		log.Println(err)
+		return nil
+	}
+	caCerts := x509.NewCertPool()
+	caCerts.AppendCertsFromPEM(caCert)
+
 	client := &http.Client{
 		Timeout: 10 * time.Second,
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				RootCAs: caCerts,
+			},
+		},
 	}
 
 	res, err := client.Do(req)
 	if err != nil {
-		http.Error(w, "error response received from API", res.StatusCode)
+		http.Error(w, "error response received from API", http.StatusBadGateway)
 		log.Println(err)
 		return nil
 	}
